@@ -1,0 +1,56 @@
+import numpy as np
+
+
+matrices = []
+for i in range(0, 10):
+  cam_mat = np.zeros((4,4))
+  with open('3D/house.00' + str(i) + '.P','r') as fp:
+    count = 0
+    for line in fp:
+      row = np.fromstring(line, dtype=float, sep=' ')
+      cam_mat[count, :] = row
+      count += 1
+      print(row)
+    matrices.append(cam_mat)
+
+camera_matrices_all = np.asarray(matrices)
+
+points = []
+for i in range(0, 10):
+  points2d = np.zeros((1,2))
+  with open('2D/house.00' + str(i) + '.corners','r') as fp:
+    firstRow = True
+    for line in fp:
+      row = np.fromstring(line, dtype=float, sep=' ').reshape(1,2)
+      if firstRow:
+        points2d[0,:] = row
+        firstRow = False
+      else:
+        points2d = np.append(points2d, row, axis = 0)
+      print(row)
+    points.append(points2d)
+
+points2d_all = np.asarray(points)
+
+matches = []
+with open('2D/house.nview-corners','r') as fp:
+  for line in fp:
+    row = np.array(line.split())
+    matches.append(row.astype(np.float))
+    print(row.astype(np.float))
+matches_all = np.asarray(matches)
+
+for i in range(0, matches_all.shape[0]):
+  match_row = matches_all[i]
+  point_matches = []
+  cam_matrices = []
+  for j in range(0, match_row.shape[0]):
+    view_j_index = match_row[j]
+    if view_j_index != -1:
+      points2d_j = points2d_all[j][view_j_index,:].reshape(1,2)
+      point_matches.append(points2d_j)
+      cam_matrices.append(camera_matrices_all[j])
+  point_matches_np = np.asarray(point_matches)
+  cam_matrices_np = np.asarray(camera_matrices_all[j])
+  #point3d = nonlinear_estimate_3d_point_LM(point_matches_np, cam_matrices_np)
+

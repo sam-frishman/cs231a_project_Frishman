@@ -1,0 +1,8 @@
+Samuel Frishman
+cs231a project
+
+The important files are triangulation.py and /data/house/SFM_on_house.py
+I have updated triangulation.py to include a bundle adjustment method that uses LM.
+SF_on_house.py reads in the dataset from Oxford Visual Geometry Group and has
+both the GN and LM bundle adjustment methods. It can also add noise to data.
+
